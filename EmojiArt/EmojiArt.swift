@@ -26,7 +26,7 @@ struct EmojiArt: Codable {
             self.size = size
             self.id = id
         }
-    }
+    }	
     
     var json: Data? {
         return try? JSONEncoder().encode(self)
@@ -47,5 +47,9 @@ struct EmojiArt: Codable {
     mutating func addEmoji(_ text: String, x: Int, y: Int, size: Int) {
         uniqueEmojiId += 1
         emojis.append(Emoji(text: text, x: x, y: y, size: size, id: uniqueEmojiId))
+        print(uniqueEmojiId)
     }
+    
+    
+    
 }
