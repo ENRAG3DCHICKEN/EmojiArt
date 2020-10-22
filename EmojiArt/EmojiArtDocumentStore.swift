@@ -9,8 +9,8 @@
 import SwiftUI
 import Combine
 
-class EmojiArtDocumentStore: ObservableObject
-{
+class EmojiArtDocumentStore: ObservableObject {
+    
     let name: String
     
     func name(for document: EmojiArtDocument) -> String {
