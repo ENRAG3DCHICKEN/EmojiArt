@@ -74,7 +74,16 @@ struct EmojiArtDocumentView: View {
                         location = CGPoint(x: location.x / self.zoomScale, y: location.y / self.zoomScale)
                         return self.drop(providers: providers, at: location)
                 }
-                .navigationBarItems(trailing: Button(action: {
+                .navigationBarItems(leading: self.pickImage,
+                    
+                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                    
+                    trailing: Button(action: {
                     if let url = UIPasteboard.general.url, url != self.document.backgroundURL {
                         self.confirmBackgroundPaste = true
                     } else {
@@ -104,6 +113,44 @@ struct EmojiArtDocumentView: View {
             )
         }
     }
+    
+    
+    @State private var showImagePicker = false
+    @State private var imagePickerSourceType = UIImagePickerController.SourceType.photoLibrary
+    
+    private var pickImage: some View {
+        HStack {
+            Image(systemName: "photo").imageScale(.large).foregroundColor(.accentColor).onTapGesture {
+                self.imagePickerSourceType = .photoLibrary
+                self.showImagePicker = true
+            }
+            if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                Image(systemName: "camera").imageScale(.large).foregroundColor(.accentColor).onTapGesture {
+                    self.imagePickerSourceType = .camera
+                    self.showImagePicker = true
+                }
+            }
+        }
+            
+            
+            
+        .sheet(isPresented: $showImagePicker) {
+            ImagePicker(sourceType: self.imagePickerSourceType) { image in
+                if image != nil {
+                    //This is to ensure that this happens only after existing events / queue items are completed (aka nothing in dispatch queue)
+                    DispatchQueue.main.async {
+                        self.document.backgroundURL = image!.storeInFilesystem()
+                    }
+                }
+                self.showImagePicker = false
+            }
+        }
+    }
+    
+    
+    
+    
+    
     
     @State private var explainBackgroundPaste = false
     @State private var confirmBackgroundPaste = false

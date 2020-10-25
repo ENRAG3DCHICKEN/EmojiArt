@@ -27,6 +27,16 @@ extension Data {
 
 extension URL {
     var imageURL: URL {
+        
+        if isFileURL {
+            var url = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
+            url = url?.appendingPathComponent(self.lastPathComponent)
+            if url != nil {
+                return url!
+            }
+        }
+        
+        
         // check to see if there is an embedded imgurl reference
         for query in query?.components(separatedBy: "&") ?? [] {
             let queryComponents = query.components(separatedBy: "=")
@@ -38,13 +48,7 @@ extension URL {
         }
         // this snippet supports the demo in Lecture 14
         // see storeInFilesystem below
-        if isFileURL {
-            var url = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
-            url = url?.appendingPathComponent(self.lastPathComponent)
-            if url != nil {
-                return url!
-            }
-        }
+
         return self.baseURL ?? self
     }
 }
